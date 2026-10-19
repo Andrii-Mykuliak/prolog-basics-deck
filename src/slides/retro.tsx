@@ -39,7 +39,7 @@ export const Win: React.FC<{
       {[0, 1, 2].map((i) => (
         <span key={i} style={{ width: 8, height: 8, borderRadius: 4, background: border }} />
       ))}
-      {tag && <span style={{ marginLeft: "auto", fontFamily: F.mono, fontSize: 15, fontWeight: 700, color: border }}>{tag}</span>}
+      {tag && <span style={{ marginLeft: "auto", fontFamily: F.mono, fontSize: 20, fontWeight: 700, color: border }}>{tag}</span>}
     </div>
     {title !== undefined && (
       <div style={{ padding: "8px 20px", borderBottom: `2px solid ${border}`, fontFamily: F.head, fontSize: 26, color: titleColor, whiteSpace: "nowrap" }}>{title}</div>

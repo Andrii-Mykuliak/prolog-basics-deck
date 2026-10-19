@@ -28,8 +28,8 @@ const Types: React.FC = () => {
         const row = Math.floor(i / 3);
         return (
           <Win key={tp.name} x={96 + col * 580} y={290 + row * 320} w={548} h={290} title={tp.name} titleColor={tp.color} p={s(1, i * 10, POP)}>
-            <div style={{ fontFamily: F.mono, fontWeight: 700, fontSize: 26, color: tp.color, whiteSpace: "pre-wrap", lineHeight: 1.5 }}>{tp.ex}</div>
-            <div style={{ marginTop: 18, fontFamily: F.body, fontWeight: 500, fontSize: 24, color: C.dim, lineHeight: 1.4 }}>{tp.note}</div>
+            <div style={{ fontFamily: F.mono, fontWeight: 700, fontSize: 30, color: tp.color, whiteSpace: "pre-wrap", lineHeight: 1.5 }}>{tp.ex}</div>
+            <div style={{ marginTop: 18, fontFamily: F.body, fontWeight: 700, fontSize: 29, color: C.dim, lineHeight: 1.4 }}>{tp.note}</div>
           </Win>
         );
       })}
@@ -98,7 +98,7 @@ const Compound: React.FC = () => {
             justifyContent: "center",
             fontFamily: F.mono,
             fontWeight: 700,
-            fontSize: 24,
+            fontSize: 28,
             color: n.kind === "f" ? C.pink : C.lav,
             opacity: clamp01(s(2, i * 6, POP)),
           }}
@@ -106,7 +106,7 @@ const Compound: React.FC = () => {
           {n.label}
         </div>
       ))}
-      <At x={96} y={860} w={1720} step={3} size={30} weight={700}>
+      <At x={96} y={860} w={1720} step={3} size={34} weight={700}>
         Терм – це дерево: функтор у вузлі, аргументи – у гілках. Так само позначають предикати: <M>append/3</M> – append з трьома аргументами.
       </At>
     </Slide>
@@ -176,8 +176,187 @@ const Lists: React.FC = () => {
       <svg width={1920} height={1080} style={{ position: "absolute", left: 0, top: 0, pointerEvents: "none", opacity: clamp01(split) }}>
         <path d={`M ${X0 + 180} ${Y + 120} L ${X0 + 180} ${Y + 140} L ${X0 + 620} ${Y + 140} L ${X0 + 620} ${Y + 120}`} fill="none" stroke={C.lav} strokeWidth={3} />
       </svg>
-      <At x={96} y={860} w={1720} step={3} size={30} weight={700}>
+      <At x={96} y={860} w={1720} step={3} size={34} weight={700}>
         Списки обробляють рекурсією: базовий випадок – порожній список, рекурсивний – голова плюс обробка хвоста.
+      </At>
+    </Slide>
+  );
+};
+
+/* Зіставлення зі зразком: як працює | */
+const LM_CELLS = [1, 2, 3, 4];
+const LM_X = (i: number) => 150 + i * 130;
+const LM_W = 104;
+const LM_PAT = [
+  { v: "X", cx: LM_X(0) + LM_W / 2, at: 0, val: "1" },
+  { v: "Y", cx: LM_X(1) + LM_W / 2, at: 26, val: "2" },
+  { v: "T", cx: (LM_X(2) + LM_X(3) + LM_W) / 2, at: 52, val: "[3, 4]" },
+];
+
+const ListMatch: React.FC = () => {
+  const { s, t } = useSteps();
+  const PY = 510;
+  const LY = 650;
+  return (
+    <Slide title="Зіставлення зі зразком: як працює |">
+      <Lead>Зразок описує форму списку. Prolog зіставляє зразок зі списком і прив’язує змінні до відповідних частин.</Lead>
+      <SyntaxBox
+        x={96}
+        y={290}
+        w={820}
+        step={1}
+        size={27}
+        lines={["[{Голова} | {Хвіст}]", "[{E1}, {E2} | {Хвіст}]   % кілька перших", "% хвіст – завжди список, можливо []"]}
+      />
+      <div style={{ position: "absolute", left: 96, top: PY + 4, fontFamily: F.mono, fontWeight: 700, fontSize: 34, color: C.dim, opacity: clamp01(s(2, 0)) }}>[</div>
+      {LM_PAT.map((pt, i) => {
+        const tt = t(2, pt.at);
+        const p = s(2, pt.at, POP);
+        const hot = pulse(tt, 10, 16);
+        return (
+          <div
+            key={pt.v}
+            style={{
+              position: "absolute",
+              left: pt.cx - 40,
+              top: PY,
+              width: 80,
+              height: 60,
+              border: `3px solid ${C.amber}`,
+              borderRadius: 6,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontFamily: F.mono,
+              fontWeight: 700,
+              fontSize: 34,
+              color: C.amber,
+              background: "rgba(242,193,78,0.12)",
+              boxShadow: hot > 0.02 ? `0 0 ${26 * hot}px ${C.amber}` : undefined,
+              opacity: clamp01(s(2, 0, POP)),
+              transform: `translateY(${(1 - clamp01(p)) * -10}px)`,
+            }}
+          >
+            {pt.v}
+          </div>
+        );
+      })}
+      <div style={{ position: "absolute", left: (LM_X(1) + LM_W + LM_X(2)) / 2 - 10, top: PY + 4, fontFamily: F.mono, fontWeight: 700, fontSize: 40, color: C.pink, opacity: clamp01(s(2, 0)) }}>|</div>
+      <div style={{ position: "absolute", left: LM_X(3) + LM_W + 14, top: PY + 4, fontFamily: F.mono, fontWeight: 700, fontSize: 34, color: C.dim, opacity: clamp01(s(2, 0)) }}>]</div>
+      {LM_CELLS.map((v, i) => {
+        const owner = i < 2 ? LM_PAT[i] : LM_PAT[2];
+        const bound = t(2, owner.at + 14) >= 0;
+        const color = i < 2 ? C.lav : C.mint;
+        return (
+          <div
+            key={i}
+            style={{
+              position: "absolute",
+              left: LM_X(i),
+              top: LY,
+              width: LM_W,
+              height: 84,
+              border: `3px solid ${bound ? color : C.cream}`,
+              borderRadius: 6,
+              background: bound ? `${color}22` : "rgba(20,18,10,0.35)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontFamily: F.mono,
+              fontWeight: 700,
+              fontSize: 40,
+              color: C.text,
+              opacity: clamp01(s(1, 20 + i * 5, POP)),
+            }}
+          >
+            {v}
+          </div>
+        );
+      })}
+      <svg width={1920} height={1080} style={{ position: "absolute", left: 0, top: 0, pointerEvents: "none" }}>
+        {LM_PAT.map((pt) => {
+          const k = clamp01(t(2, pt.at + 4) / 12);
+          return k > 0 ? (
+            <line key={pt.v} x1={pt.cx} y1={PY + 62} x2={pt.cx} y2={PY + 62 + (LY - PY - 66) * k} stroke={C.amber} strokeWidth={3} strokeDasharray="6 6" />
+          ) : null;
+        })}
+        <path
+          d={`M ${LM_X(2)} ${LY + 96} L ${LM_X(2)} ${LY + 110} L ${LM_X(3) + LM_W} ${LY + 110} L ${LM_X(3) + LM_W} ${LY + 96}`}
+          fill="none"
+          stroke={C.mint}
+          strokeWidth={3}
+          opacity={clamp01(s(2, LM_PAT[2].at + 14))}
+        />
+      </svg>
+      {LM_PAT.map((pt, i) => (
+        <div
+          key={pt.v}
+          style={{
+            position: "absolute",
+            left: pt.cx - 110,
+            width: 220,
+            top: LY + 120,
+            textAlign: "center",
+            fontFamily: F.mono,
+            fontWeight: 700,
+            fontSize: 30,
+            color: i < 2 ? C.lav : C.mint,
+            opacity: clamp01(s(2, pt.at + 16)),
+          }}
+        >
+          {`${pt.v} = ${pt.val}`}
+        </div>
+      ))}
+      <Term
+        x={980}
+        y={290}
+        w={844}
+        h={580}
+        step={3}
+        p={s(3, 0, POP)}
+        size={28}
+        lines={[
+          { text: "?- [H|T] = [a].", at: 0 },
+          { text: "H = a, T = [].", at: 18 },
+          { text: "?- [H|T] = [].", at: 36 },
+          { text: "false.", at: 54, color: C.red },
+          { text: "?- [_, Y|_] = [a, b, c].", at: 72 },
+          { text: "Y = b.", at: 90 },
+          { text: "?- [a|T] = [b, c].", at: 108 },
+          { text: "false.", at: 126, color: C.red },
+          { text: "?- [1, 2] = [1|[2|[]]].", at: 144 },
+          { text: "true.", at: 162 },
+        ]}
+      />
+      <At x={96} y={900} w={1720} step={4} size={32} weight={700}>
+        Порожній список не має голови, тому <M c={C.red}>[H|T]</M> з ним не зіставляється; <M>_</M> пропускає елемент, не прив’язуючи його.
+      </At>
+    </Slide>
+  );
+};
+
+/* Операції через зразки */
+const OPS = [
+  { title: "Перший елемент", color: C.lav, code: "перший([H|_], H).\n\n?- перший([a, b, c], X).\nX = a." },
+  { title: "Останній елемент", color: C.pink, code: "останній([X], X).\nостанній([_|T], X) :-\n    останній(T, X).\n?- останній([a, b, c], X).  X = c." },
+  { title: "Належність", color: C.amber, code: "належить(X, [X|_]).\nналежить(X, [_|T]) :-\n    належить(X, T).\n?- належить(b, [a, b, c]).  true." },
+  { title: "Склеювання", color: C.mint, code: "склеїти([], L, L).\nсклеїти([H|T], L, [H|R]) :-\n    склеїти(T, L, R).\n?- склеїти([1, 2], [3], L).  L = [1, 2, 3]." },
+];
+
+const ListOps: React.FC = () => {
+  const { s } = useSteps();
+  return (
+    <Slide title="Операції через зразки">
+      <Lead>
+        Зразок працює в обидва боки: у тілі й аргументах він <A>розбирає</A> список, а в голові правила <A>будує</A> новий.
+      </Lead>
+      {OPS.map((o, i) => (
+        <Win key={o.title} x={96 + (i % 2) * 878} y={280 + Math.floor(i / 2) * 300} w={850} h={280} title={o.title} titleColor={o.color} tag={`0${i + 1}`} p={s(i + 1, 0, POP)}>
+          <div style={{ fontFamily: F.mono, fontWeight: 700, fontSize: 27, lineHeight: 1.45, color: C.mint, whiteSpace: "pre" }}>{o.code}</div>
+        </Win>
+      ))}
+      <At x={96} y={900} w={1720} step={4} delay={30} size={30} weight={700}>
+        У <M>склеїти([H|T], L, [H|R])</M> голова результату та сама, що й першого списку, а хвіст <M>R</M> обчислює рекурсія.
       </At>
     </Slide>
   );
@@ -234,7 +413,7 @@ const Length: React.FC = () => {
               boxSizing: "border-box",
               fontFamily: F.mono,
               fontWeight: 700,
-              fontSize: 26,
+              fontSize: 30,
               color: C.text,
               boxShadow: hot > 0.02 ? `0 0 ${26 * hot}px ${C.mint}` : undefined,
               opacity: clamp01(down),
@@ -246,10 +425,10 @@ const Length: React.FC = () => {
           </div>
         );
       })}
-      <At x={96} y={580} w={820} step={2} delay={10} size={24} weight={600} color={C.dim}>
+      <At x={96} y={580} w={820} step={2} delay={10} size={29} weight={700} color={C.dim}>
         вниз – виклики для дедалі коротших хвостів; вгору – N обчислюється на зворотному шляху
       </At>
-      <At x={96} y={860} w={1720} step={3} size={30} weight={700}>
+      <At x={96} y={860} w={1720} step={3} size={34} weight={700}>
         Кожен рекурсивний виклик працює з коротшим списком, тому рекурсія гарантовано доходить до <M>[]</M>.
       </At>
     </Slide>
@@ -282,14 +461,14 @@ const Reverse: React.FC = () => {
         `}
       />
       {rows.map((r, i) => (
-        <div key={i} style={{ position: "absolute", left: 1040, top: 350 + i * 110, display: "flex", gap: 24, alignItems: "center", fontFamily: F.mono, fontWeight: 700, fontSize: 28, opacity: clamp01(s(2, i * 24, POP)) }}>
+        <div key={i} style={{ position: "absolute", left: 1040, top: 350 + i * 110, display: "flex", gap: 24, alignItems: "center", fontFamily: F.mono, fontWeight: 700, fontSize: 31, opacity: clamp01(s(2, i * 24, POP)) }}>
           <span style={{ color: C.text }}>{r.call}</span>
           <span style={{ color: C.faint }}>→</span>
           <span style={{ color: C.mint, padding: "6px 14px", border: `2.5px solid ${C.mint}`, borderRadius: 4 }}>{r.r}</span>
         </div>
       ))}
       <Win x={96} y={640} w={1728} title="Чому саме append" titleColor={C.amber} p={s(3, 0, POP)} pad="14px 22px">
-        <div style={{ fontFamily: F.body, fontWeight: 500, fontSize: 26, color: C.text, lineHeight: 1.45 }}>
+        <div style={{ fontFamily: F.body, fontWeight: 700, fontSize: 30, color: C.text, lineHeight: 1.45 }}>
           Якщо замість <M>append(R1, [H], R)</M> додати H у голову, вийде <M c={C.red}>[1, 2, 3]</M> – той самий список: голова має опинитися в кінці.
         </div>
       </Win>
@@ -339,11 +518,11 @@ const Strings: React.FC = () => {
       <Lead>Атоми й стрічки – різні типи даних, і працюють з ними по-різному.</Lead>
       <Win x={96} y={290} w={820} h={300} title="Атоми" titleColor={C.mint} p={s(1, 0, POP)}>
         <div style={{ fontFamily: F.mono, fontWeight: 700, fontSize: 32, color: C.mint, lineHeight: 1.6, whiteSpace: "pre" }}>{"hello\n'Hello World'"}</div>
-        <div style={{ marginTop: 10, fontFamily: F.body, fontWeight: 500, fontSize: 24, color: C.dim }}>без лапок або в одинарних, якщо є пробіли чи спецсимволи</div>
+        <div style={{ marginTop: 10, fontFamily: F.body, fontWeight: 700, fontSize: 29, color: C.dim }}>без лапок або в одинарних, якщо є пробіли чи спецсимволи</div>
       </Win>
       <Win x={1004} y={290} w={820} h={300} title="Стрічки" titleColor={C.orange} p={s(2, 0, POP)}>
         <div style={{ fontFamily: F.mono, fontWeight: 700, fontSize: 32, color: C.orange }}>"Hello World"</div>
-        <div style={{ marginTop: 10, fontFamily: F.body, fontWeight: 500, fontSize: 24, color: C.dim, lineHeight: 1.4 }}>
+        <div style={{ marginTop: 10, fontFamily: F.body, fontWeight: 700, fontSize: 29, color: C.dim, lineHeight: 1.4 }}>
           значення подвійних лапок залежить від системи та прапорця double_quotes
         </div>
       </Win>
@@ -357,10 +536,10 @@ const Strings: React.FC = () => {
           </div>
         </React.Fragment>
       ))}
-      <At x={1100} y={680} w={720} step={3} delay={30} size={26} weight={600} color={C.text}>
+      <At x={1100} y={680} w={720} step={3} delay={30} size={30} weight={700} color={C.text}>
         У класичному Prolog <M c={C.orange}>"Hello"</M> – це список кодів символів <M c={C.lav}>[72, 101, 108, 108, 111]</M>.
       </At>
-      <At x={96} y={880} w={1720} step={4} size={28} weight={700}>
+      <At x={96} y={880} w={1720} step={4} size={32} weight={700}>
         У SWI-Prolog 7+ подвійні лапки за замовчуванням створюють окремий тип <A>string</A>; список кодів дає прапорець double_quotes = codes.
       </At>
     </Slide>
@@ -408,7 +587,7 @@ const Summary: React.FC = () => {
             }}
           >
             <Num n={i + 1} size={46} style={{ marginTop: 2 }} />
-            <div style={{ fontFamily: F.body, fontWeight: 500, fontSize: 30, lineHeight: 1.4, color: C.text }}>{p}</div>
+            <div style={{ fontFamily: F.body, fontWeight: 700, fontSize: 34, lineHeight: 1.4, color: C.text }}>{p}</div>
           </div>
         );
       })}
@@ -420,6 +599,8 @@ export const s3Slides: SlideDef[] = [
   { id: "types", title: "Типи даних", steps: [40, 80], C: Types },
   { id: "compound", title: "Складені терми", steps: [40, 60, 60, 60], C: Compound },
   { id: "lists", title: "Списки", steps: [40, 70, 60, 60], C: Lists },
+  { id: "list-match", title: "Зіставлення зі зразком", steps: [45, 50, 90, 190, 60], C: ListMatch },
+  { id: "list-ops", title: "Операції через зразки", steps: [45, 40, 40, 40, 70], C: ListOps },
   { id: "length", title: "довжина/2", steps: [40, 60, 8 * LEN_GAP + 30, 60], C: Length },
   { id: "reverse", title: "обернути/2", steps: [40, 60, 80, 60], C: Reverse },
   { id: "builtins", title: "Вбудовані предикати", steps: [40, 210], C: Builtins },

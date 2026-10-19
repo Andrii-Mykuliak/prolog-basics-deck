@@ -18,7 +18,7 @@ export const Term: React.FC<{
   step: number;
   p?: number;
   size?: number;
-}> = ({ x, y, w, h, title = "swipl", lines, step, p = 1, size = 28 }) => {
+}> = ({ x, y, w, h, title = "swipl", lines, step, p = 1, size = 31 }) => {
   const { t, frame } = useSteps();
   const shown = lines.filter((l) => t(l.step ?? step, l.at) >= 0);
   const last = shown[shown.length - 1];
@@ -57,11 +57,11 @@ const KnowledgeBase: React.FC = () => {
       </Lead>
       {cards.map((c, i) => (
         <Win key={c.title} x={96 + i * 590} y={340} w={550} h={430} title={c.title} titleColor={c.color} tag={`0${i + 1}`} p={s(1, i * 14, POP)} glow={pulse(t(2, i * 22), 8, 16)}>
-          <div style={{ fontFamily: F.body, fontWeight: 500, fontSize: 27, lineHeight: 1.4, color: C.text, minHeight: 120 }}>{c.text}</div>
-          <div style={{ marginTop: 26, fontFamily: F.mono, fontWeight: 700, fontSize: 26, color: c.color, whiteSpace: "pre", lineHeight: 1.5 }}>{c.code}</div>
+          <div style={{ fontFamily: F.body, fontWeight: 700, fontSize: 31, lineHeight: 1.4, color: C.text, minHeight: 120 }}>{c.text}</div>
+          <div style={{ marginTop: 26, fontFamily: F.mono, fontWeight: 700, fontSize: 30, color: c.color, whiteSpace: "pre", lineHeight: 1.5 }}>{c.code}</div>
         </Win>
       ))}
-      <At x={96} y={850} w={1720} step={3} size={30} weight={700}>
+      <At x={96} y={850} w={1720} step={3} size={34} weight={700}>
         Програмування на Prolog – це опис фактів і правил; механізм виведення шукає відповіді за нас.
       </At>
     </Slide>
@@ -144,7 +144,7 @@ const Facts: React.FC = () => {
             justifyContent: "center",
             fontFamily: F.mono,
             fontWeight: 700,
-            fontSize: 26,
+            fontSize: 30,
             color: C.text,
             opacity: clamp01(s(1, 20 + i * 4, POP)),
           }}
@@ -152,10 +152,10 @@ const Facts: React.FC = () => {
           {name}
         </div>
       ))}
-      <At x={1220} y={560} w={380} step={2} delay={10} size={22} weight={700} color={C.red} align="center">
+      <At x={1220} y={560} w={380} step={2} delay={10} size={27} weight={700} color={C.red} align="center">
         друг(олег, іван) – такого факту немає
       </At>
-      <At x={96} y={870} w={1720} step={2} delay={20} size={30} weight={700}>
+      <At x={96} y={870} w={1720} step={2} delay={20} size={34} weight={700}>
         Порядок аргументів має значення: <M>друг(іван, олег)</M> – не те саме, що <M c={C.red}>друг(олег, іван)</M>.
       </At>
     </Slide>
@@ -211,7 +211,7 @@ const Queries: React.FC = () => {
           { text: q.a, at: k * Q_GAP + 28, color: q.color },
         ])}
       />
-      <At x={96} y={870} w={1720} step={3} size={30} weight={700}>
+      <At x={96} y={870} w={1720} step={3} size={34} weight={700}>
         Якщо в запиті є змінні, Prolog шукає їхні значення, за яких ціль досяжна; без змінних – лише перевіряє істинність.
       </At>
     </Slide>
@@ -246,13 +246,13 @@ const Rules: React.FC = () => {
       />
       <div style={{ position: "absolute", left: 96, top: 710, display: "flex", gap: 20, alignItems: "center", fontFamily: F.mono, fontSize: 30, fontWeight: 700, opacity: clamp01(s(3, 0)) }}>
         <span style={{ padding: "8px 18px", border: `2.5px solid ${C.amber}`, color: C.amber, borderRadius: 4 }}>володіє_логікою(X)</span>
-        <span style={{ color: C.dim, fontFamily: F.body, fontSize: 26 }}>якщо</span>
+        <span style={{ color: C.dim, fontFamily: F.body, fontSize: 30 }}>якщо</span>
         <span style={{ padding: "8px 18px", border: `2.5px solid ${C.mint}`, color: C.mint, borderRadius: 4 }}>математик(X)</span>
       </div>
-      <At x={96} y={790} step={3} delay={8} size={24} weight={500} color={C.dim}>
+      <At x={96} y={790} step={3} delay={8} size={29} weight={700} color={C.dim}>
         голова ліворуч від :-, тіло – праворуч
       </At>
-      <At x={96} y={880} w={1720} step={4} size={30} weight={700}>
+      <At x={96} y={880} w={1720} step={4} size={34} weight={700}>
         Змінна <M c={C.amber}>X</M> пов’язує голову з тілом: будь-хто, хто є математиком, володіє логікою.
       </At>
     </Slide>
@@ -261,29 +261,30 @@ const Rules: React.FC = () => {
 
 /* Кон’юнкція і диз’юнкція */
 const SETS = [
-  { name: "ходить", x: 1180, y: 480, r: 150, color: C.mint, members: ["зебра", "тигр"] },
-  { name: "літає", x: 1600, y: 470, r: 100, color: C.lav, members: ["орел"] },
-  { name: "хижак", x: 1340, y: 660, r: 100, color: C.red, members: ["тигр"] },
+  { name: "ходить", x: 1150, y: 470, r: 160, color: C.mint, lx: 1150, ly: 280 },
+  { name: "літає", x: 1640, y: 440, r: 105, color: C.lav, lx: 1640, ly: 305 },
+  { name: "хижак", x: 1310, y: 640, r: 110, color: C.red, lx: 1420, ly: 770 },
+];
+const ANIMALS = [
+  { n: "зебра", dx: 1070, dy: 430, lx: 960, ly: 360 },
+  { n: "тигр", dx: 1250, dy: 570, lx: 1090, ly: 760 },
+  { n: "орел", dx: 1640, dy: 450, lx: 1790, ly: 560 },
+  { n: "дельфін", dx: 1600, dy: 690, lx: 1720, ly: 760 },
 ];
 
 const AndOr: React.FC = () => {
-  const { s, t } = useSteps();
+  const { s } = useSteps();
   const or = s(2, 0);
   const and = s(3, 0);
-  const animals = [
-    { n: "зебра", x: 1100, y: 430 },
-    { n: "тигр", x: 1268, y: 585 },
-    { n: "орел", x: 1600, y: 470 },
-    { n: "дельфін", x: 1690, y: 760 },
-  ];
   const inOr = (n: string) => n !== "дельфін";
+  const colorOf = (n: string) => (and > 0.5 ? (n === "тигр" ? C.pink : C.faint) : or > 0.5 ? (inOr(n) ? C.amber : C.faint) : C.text);
   return (
     <Slide title="Кон’юнкція і диз’юнкція">
       <Code
         x={96}
-        y={190}
-        size={25}
-        lh={38}
+        y={186}
+        size={32}
+        lh={50}
         step={1}
         stagger={4}
         code={`
@@ -299,48 +300,77 @@ const AndOr: React.FC = () => {
       />
       <svg width={1920} height={1080} style={{ position: "absolute", left: 0, top: 0, pointerEvents: "none" }}>
         {SETS.map((st, i) => (
-          <g key={st.name} opacity={clamp01(s(1, 10 + i * 6))}>
-            <circle cx={st.x} cy={st.y} r={st.r} fill={st.color} opacity={0.08 + (i < 2 ? 0.1 * or : 0) + (i === 2 ? 0.12 * and : 0)} stroke={st.color} strokeWidth={3} strokeDasharray="10 6" />
-          </g>
+          <circle
+            key={st.name}
+            cx={st.x}
+            cy={st.y}
+            r={st.r}
+            fill={st.color}
+            fillOpacity={0.07 + (i < 2 ? 0.1 * or : 0) + (i === 2 ? 0.12 * and : 0)}
+            stroke={st.color}
+            strokeWidth={3}
+            opacity={clamp01(s(1, 10 + i * 6))}
+          />
         ))}
+        {ANIMALS.map((a, i) => {
+          const p = clamp01(s(1, 22 + i * 5));
+          const col = colorOf(a.n);
+          const hot = (a.n === "тигр" ? and : 0) + (inOr(a.n) ? or * (1 - and) : 0);
+          return (
+            <g key={a.n} opacity={p}>
+              <line x1={a.dx} y1={a.dy} x2={a.lx} y2={a.ly} stroke={col} strokeWidth={2} strokeDasharray="6 6" opacity={0.85} />
+              {hot > 0.05 && <circle cx={a.dx} cy={a.dy} r={18} fill={col} opacity={0.25 * hot} />}
+              <circle cx={a.dx} cy={a.dy} r={9} fill={col} stroke="#14120a" strokeWidth={2} />
+            </g>
+          );
+        })}
       </svg>
       {SETS.map((st, i) => (
-        <At key={st.name} x={st.x - 100} y={i === 2 ? st.y + st.r + 8 : st.y - st.r - 40} w={200} step={1} delay={10 + i * 6} size={24} weight={700} color={st.color} font={F.mono} align="center">
-          {st.name}
-        </At>
+        <div
+          key={st.name}
+          style={{
+            position: "absolute",
+            left: st.lx - 90,
+            top: st.ly - 20,
+            width: 180,
+            textAlign: "center",
+            fontFamily: F.mono,
+            fontWeight: 700,
+            fontSize: 30,
+            color: st.color,
+            opacity: clamp01(s(1, 10 + i * 6)),
+          }}
+        >
+          {`<${st.name}>`}
+        </div>
       ))}
-      {animals.map((a, i) => {
-        const hotOr = inOr(a.n) ? or : 0;
-        const hotAnd = a.n === "тигр" ? and : 0;
-        return (
-          <div
-            key={a.n}
-            style={{
-              position: "absolute",
-              left: a.x - 70,
-              top: a.y - 22,
-              width: 140,
-              textAlign: "center",
-              fontFamily: F.mono,
-              fontWeight: 700,
-              fontSize: 26,
-              color: hotAnd > 0.5 ? C.pink : hotOr > 0.5 ? C.amber : C.text,
-              textShadow: hotAnd > 0.5 ? `0 0 16px ${C.pink}` : undefined,
-              opacity: clamp01(s(1, 20 + i * 4)) * (and > 0.5 && a.n !== "тигр" ? 0.4 : 1),
-              transform: `scale(${1 + 0.25 * hotAnd})`,
-            }}
-          >
-            {a.n}
-          </div>
-        );
-      })}
-      <At x={1000} y={830} w={820} step={2} delay={10} size={26} weight={700} color={C.amber}>
+      {ANIMALS.map((a, i) => (
+        <div
+          key={a.n}
+          style={{
+            position: "absolute",
+            left: a.lx - 80,
+            top: a.ly - 22,
+            width: 160,
+            textAlign: "center",
+            fontFamily: F.body,
+            fontWeight: 700,
+            fontSize: 32,
+            color: colorOf(a.n),
+            textShadow: a.n === "тигр" && and > 0.5 ? `0 0 16px ${C.pink}` : undefined,
+            opacity: clamp01(s(1, 22 + i * 5)),
+          }}
+        >
+          {a.n}
+        </div>
+      ))}
+      <At x={1000} y={830} w={820} step={2} delay={10} size={30} weight={700} color={C.amber}>
         «;» – або: суходільні тварини – зебра, тигр, орел
       </At>
-      <At x={1000} y={880} w={820} step={3} delay={20} size={26} weight={700} color={C.pink}>
+      <At x={1000} y={880} w={820} step={3} delay={20} size={30} weight={700} color={C.pink}>
         «,» – і: суходільний хижак лише тигр
       </At>
-      <At x={96} y={880} w={860} step={3} delay={30} size={24} weight={500} color={C.dim}>
+      <At x={96} y={880} w={860} step={3} delay={30} size={29} weight={700} color={C.dim}>
         Орел не підходить: факту хижак(орел) у базі немає.
       </At>
     </Slide>
@@ -365,7 +395,7 @@ const Variables: React.FC = () => {
       {rules.map((r, i) => (
         <div key={r.k} style={{ position: "absolute", left: 96, top: 340 + i * 100, width: 900, opacity: clamp01(s(1, i * 10)), transform: `translateX(${(1 - s(1, i * 10)) * -24}px)` }}>
           <div style={{ fontFamily: F.title, fontWeight: 700, fontSize: 30, color: C.pink }}>{r.k}</div>
-          <div style={{ marginTop: 4, fontFamily: F.body, fontWeight: 500, fontSize: 25, color: C.text }}>{r.v}</div>
+          <div style={{ marginTop: 4, fontFamily: F.body, fontWeight: 700, fontSize: 29, color: C.text }}>{r.v}</div>
         </div>
       ))}
       <div
@@ -398,17 +428,17 @@ const Variables: React.FC = () => {
           </svg>
         )}
       </div>
-      <At x={1160} y={540} w={560} step={1} delay={10} size={24} weight={600} color={C.dim} align="center">
+      <At x={1160} y={540} w={560} step={1} delay={10} size={29} weight={700} color={C.dim} align="center">
         {bound > 0.5 ? "зв’язана: друг(X, іван) дає X = олена" : "вільна змінна"}
       </At>
       <At x={1160} y={600} w={560} step={3} size={28} weight={700} color={C.red} align="center" font={F.mono}>
         X = олег ✗
       </At>
-      <At x={1160} y={644} w={560} step={3} delay={6} size={22} weight={600} color={C.red} align="center">
+      <At x={1160} y={644} w={560} step={3} delay={6} size={27} weight={700} color={C.red} align="center">
         у межах того самого запиту – ні
       </At>
-      <Code x={1160} y={730} size={28} step={4} code={`?- друг(_, іван).   % true`} />
-      <At x={1160} y={790} w={660} step={4} delay={10} size={22} weight={600} color={C.dim}>
+      <Code x={1160} y={730} size={31} step={4} code={`?- друг(_, іван).   % true`} />
+      <At x={1160} y={790} w={660} step={4} delay={10} size={27} weight={700} color={C.dim}>
         «хтось дружить з Іваном», хто саме – не важливо
       </At>
     </Slide>
@@ -423,13 +453,13 @@ const DetNondet: React.FC = () => {
   return (
     <Slide title="Детерміновані й недетерміновані предикати">
       <Win x={96} y={190} w={820} h={300} title="Детермінований" titleColor={C.lav} p={s(1, 0, POP)}>
-        <div style={{ fontFamily: F.body, fontWeight: 500, fontSize: 25, lineHeight: 1.45, color: C.text }}>
+        <div style={{ fontFamily: F.body, fontWeight: 700, fontSize: 29, lineHeight: 1.45, color: C.text }}>
           Знаходить одне рішення або жодного; якщо рішення є, інших немає.
         </div>
-        <div style={{ marginTop: 18, fontFamily: F.mono, fontWeight: 700, fontSize: 26, color: C.mint, whiteSpace: "pre" }}>{"?- друг(сергій, Y).\nY = олена."}</div>
+        <div style={{ marginTop: 18, fontFamily: F.mono, fontWeight: 700, fontSize: 30, color: C.mint, whiteSpace: "pre" }}>{"?- друг(сергій, Y).\nY = олена."}</div>
       </Win>
       <Win x={96} y={520} w={820} h={340} title="Недетермінований" titleColor={C.pink} p={s(2, 0, POP)}>
-        <div style={{ fontFamily: F.body, fontWeight: 500, fontSize: 25, lineHeight: 1.45, color: C.text }}>
+        <div style={{ fontFamily: F.body, fontWeight: 700, fontSize: 29, lineHeight: 1.45, color: C.text }}>
           Може знайти кілька рішень: запам’ятовує місце, де зупинився, і на запит «;» продовжує пошук звідти.
         </div>
       </Win>
@@ -449,13 +479,13 @@ const DetNondet: React.FC = () => {
       />
       <Win x={980} y={640} w={844} h={220} title="база знань" titleColor={C.mint} p={s(2, 6, POP)} pad="10px 22px">
         {facts.map((f, i) => (
-          <div key={f} style={{ display: "flex", alignItems: "center", gap: 12, fontFamily: F.mono, fontWeight: 700, fontSize: 25, lineHeight: 1.5, color: i === pointer ? C.amber : C.mint }}>
+          <div key={f} style={{ display: "flex", alignItems: "center", gap: 12, fontFamily: F.mono, fontWeight: 700, fontSize: 29, lineHeight: 1.5, color: i === pointer ? C.amber : C.mint }}>
             <span style={{ width: 22, color: C.amber }}>{i === pointer && t(2, 10) >= 0 ? "▶" : ""}</span>
             {f}
           </div>
         ))}
       </Win>
-      <At x={96} y={900} w={1720} step={3} size={28} weight={700}>
+      <At x={96} y={900} w={1720} step={3} size={32} weight={700}>
         Маркер ▶ – запам’ятоване місце пошуку: після «;» Prolog продовжує з наступного речення бази знань.
       </At>
     </Slide>

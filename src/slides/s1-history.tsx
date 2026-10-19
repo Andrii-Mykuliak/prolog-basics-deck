@@ -7,6 +7,14 @@ import { clamp01, pulse } from "./common";
 import { Rocket, Stars, Win } from "./retro";
 
 /* Що таке логічне програмування */
+const IMPERATIVE = ["Переглянути кожну людину p.", "Для кожної людини q перевірити: p – батько q, а q – батько Анни.", "Якщо так – вивести p."];
+const DECLARATIVE = [
+  { tag: "Факт", text: "Іван – батько Петра.", color: C.mint },
+  { tag: "Факт", text: "Петро – батько Анни.", color: C.mint },
+  { tag: "Правило", text: "X – дід Z, якщо X – батько Y, а Y – батько Z.", color: C.amber },
+  { tag: "Питання", text: "Хто дід Анни?  Відповідь: Іван.", color: C.lav },
+];
+
 const WhatIs: React.FC = () => {
   const { s } = useSteps();
   return (
@@ -14,47 +22,29 @@ const WhatIs: React.FC = () => {
       <Lead>
         Логічне програмування спирається на формальну логіку: програма описує <A>відношення й твердження</A>, а не послідовність інструкцій.
       </Lead>
-      <Win x={96} y={330} w={840} title="Імперативно: як шукати" titleColor={C.amber} p={s(1, 0, POP)}>
-        <Code
-          x={0}
-          y={0}
-          size={26}
-          step={1}
-          delay={10}
-          stagger={6}
-          style={{ position: "relative", color: C.dim }}
-          code={`
-            for (p in people)
-              for (q in people)
-                if (parent(p, q) && parent(q, "анна"))
-                  print(p);
-          `}
-        />
-        <div style={{ marginTop: 26, fontFamily: F.body, fontWeight: 500, fontSize: 26, color: C.dim, opacity: clamp01(s(1, 30)) }}>
+      <Win x={96} y={320} w={840} h={500} title="Імперативно: як шукати" titleColor={C.amber} p={s(1, 0, POP)}>
+        {IMPERATIVE.map((l, i) => (
+          <div key={l} style={{ display: "flex", gap: 16, fontFamily: F.body, fontWeight: 700, fontSize: 30, lineHeight: 1.35, color: C.text, marginBottom: 16, opacity: clamp01(s(1, 8 + i * 8)) }}>
+            <span style={{ fontFamily: F.pixel, fontSize: 22, color: C.amber, marginTop: 6 }}>{i + 1}</span>
+            <span>{l}</span>
+          </div>
+        ))}
+        <div style={{ marginTop: 14, fontFamily: F.body, fontWeight: 700, fontSize: 28, color: C.dim, opacity: clamp01(s(1, 34)) }}>
           Програміст сам організовує перебір: цикли, умови, порядок дій.
         </div>
       </Win>
-      <Win x={984} y={330} w={840} title="Логічно: що відомо" titleColor={C.mint} p={s(2, 0, POP)}>
-        <Code
-          x={0}
-          y={0}
-          size={26}
-          step={2}
-          delay={10}
-          stagger={8}
-          style={{ position: "relative" }}
-          code={`
-            батько(іван, петро).
-            батько(петро, анна).
-            дід(X, Z) :- батько(X, Y), батько(Y, Z).
-            ?- дід(X, анна).    % X = іван
-          `}
-        />
-        <div style={{ marginTop: 26, fontFamily: F.body, fontWeight: 500, fontSize: 26, color: C.dim, opacity: clamp01(s(2, 40)) }}>
-          Програміст описує знання; перебір і висновки виконує Prolog.
+      <Win x={984} y={320} w={840} h={500} title="Декларативно: що відомо" titleColor={C.mint} p={s(2, 0, POP)}>
+        {DECLARATIVE.map((l, i) => (
+          <div key={l.text} style={{ display: "flex", gap: 16, alignItems: "baseline", fontFamily: F.body, fontWeight: 700, fontSize: 30, lineHeight: 1.35, color: C.text, marginBottom: 14, opacity: clamp01(s(2, 8 + i * 8)) }}>
+            <span style={{ minWidth: 170, fontFamily: F.title, fontSize: 30, color: l.color }}>{l.tag}</span>
+            <span>{l.text}</span>
+          </div>
+        ))}
+        <div style={{ marginTop: 10, fontFamily: F.body, fontWeight: 700, fontSize: 28, color: C.dim, opacity: clamp01(s(2, 44)) }}>
+          Програміст описує знання; перебір і висновки виконує система.
         </div>
       </Win>
-      <At x={96} y={860} w={1720} step={3} size={32} weight={700}>
+      <At x={96} y={870} w={1720} step={3} size={34} weight={700}>
         Prolog сам шукає відповідь: опис задачі одночасно є програмою, а результат – <A>логічним наслідком</A> фактів і правил.
       </At>
     </Slide>
@@ -124,13 +114,13 @@ const Timeline: React.FC = () => {
             >
               <div style={{ fontFamily: F.pixel, fontSize: 24, color: e.color }}>{e.year}</div>
               <div style={{ marginTop: 14, fontFamily: F.title, fontWeight: 700, fontSize: 27, color: C.text, lineHeight: 1.2 }}>{e.who}</div>
-              <div style={{ marginTop: 8, fontFamily: F.body, fontWeight: 500, fontSize: 21, color: C.dim, lineHeight: 1.3 }}>{e.what}</div>
+              <div style={{ marginTop: 8, fontFamily: F.body, fontWeight: 700, fontSize: 26, color: C.dim, lineHeight: 1.3 }}>{e.what}</div>
             </div>
           </React.Fragment>
         );
       })}
       {prog > 0 && prog < 1 && <Rocket x={rx} y={ry} s={0.5} rot={90} flame={0.5 + 0.5 * Math.sin(frame * 0.8)} />}
-      <At x={96} y={880} w={1720} step={2} size={30} weight={700}>
+      <At x={96} y={880} w={1720} step={2} size={34} weight={700}>
         Prolog став першою мовою логічного програмування; Ковальський дав йому теоретичну основу – хорнівські диз’юнкти.
       </At>
     </Slide>
@@ -190,21 +180,21 @@ const Resolution: React.FC = () => {
         <polygon points="652,445 638,437 638,453" fill={C.dim} />
       </svg>
       <Clause x={670} y={400} p={s(1, 30, POP)} parts={[{ t: "A ∨ C" }]} color={C.mint} glow={pulse(t(1, 30), 8, 20)} />
-      <Win x={1060} y={320} w={760} title="Силогізм як резолюція" p={s(2, 0, POP)}>
+      <Win x={1000} y={320} w={824} title="Силогізм як резолюція" p={s(2, 0, POP)}>
         {[
-          { a: "людина(сократ)", b: "", c: C.mint },
-          { a: "¬людина(X) ∨ смертний(X)", b: "", c: C.amber },
-          { a: "смертний(сократ)", b: "  X = сократ", c: C.lav },
+          { a: "Людина(Сократ)", b: "", c: C.mint },
+          { a: "¬Людина(x) ∨ Смертний(x)", b: "", c: C.amber },
+          { a: "Смертний(Сократ)", b: "  x = Сократ", c: C.lav },
         ].map((r, i) => (
-          <div key={i} style={{ fontFamily: F.mono, fontSize: 28, lineHeight: 1.8, color: r.c, whiteSpace: "pre", opacity: clamp01(s(2, 10 + i * 16)) }}>
+          <div key={i} style={{ fontFamily: F.mono, fontSize: 34, lineHeight: 1.8, color: r.c, whiteSpace: "pre", opacity: clamp01(s(2, 10 + i * 16)) }}>
             {i === 2 ? "⟹ " : "   "}
             {r.a}
-            <span style={{ color: C.dim, fontSize: 22 }}>{r.b}</span>
+            <span style={{ color: C.dim, fontSize: 28 }}>{r.b}</span>
           </div>
         ))}
-        <div style={{ marginTop: 8, fontFamily: F.body, fontSize: 22, color: C.dim, opacity: g2 }}>людина(X) і ¬людина(X) скорочуються після підстановки X = сократ</div>
+        <div style={{ marginTop: 8, fontFamily: F.body, fontWeight: 700, fontSize: 28, color: C.dim, opacity: g2 }}>Людина(Сократ) і ¬Людина(x) скорочуються після підстановки x = Сократ</div>
       </Win>
-      <At x={96} y={880} w={1720} step={3} size={30} weight={700}>
+      <At x={96} y={880} w={1720} step={3} size={34} weight={700}>
         Prolog доводить запит, раз за разом застосовуючи резолюцію до фактів і правил бази знань.
       </At>
     </Slide>
@@ -213,14 +203,14 @@ const Resolution: React.FC = () => {
 
 /* Хорнівські диз’юнкти */
 const HORN = [
-  { clause: "A", impl: "A", prolog: "a.", kind: "факт", color: C.mint },
-  { clause: "A ∨ ¬B ∨ ¬C", impl: "A ← B ∧ C", prolog: "a :- b, c.", kind: "правило", color: C.amber },
-  { clause: "¬A ∨ ¬B", impl: "← A ∧ B", prolog: "?- a, b.", kind: "запит", color: C.lav },
+  { clause: "A", impl: "A", prolog: "A істинне", kind: "факт", color: C.mint },
+  { clause: "A ∨ ¬B ∨ ¬C", impl: "A ← B ∧ C", prolog: "A, якщо B і C", kind: "правило", color: C.amber },
+  { clause: "¬A ∨ ¬B", impl: "← A ∧ B", prolog: "чи істинні A і B?", kind: "запит", color: C.lav },
 ];
 
 const Horn: React.FC = () => {
   const { s } = useSteps();
-  const COLS = [140, 600, 1020, 1430];
+  const COLS = [140, 560, 940, 1480];
   const Y0 = 490;
   const RH = 104;
   return (
@@ -230,9 +220,9 @@ const Horn: React.FC = () => {
       </Lead>
       <At x={96} y={330} step={1} size={30} weight={700} font={F.mono} color={C.text}>
         (A ∨ ¬B) ∧ (¬A ∨ C)
-        <span style={{ fontFamily: F.body, fontSize: 24, color: C.dim, fontWeight: 500 }}>{"   – кожна диз’юнкція має рівно один позитивний літерал"}</span>
+        <span style={{ fontFamily: F.body, fontSize: 29, color: C.dim, fontWeight: 700 }}>{"   – кожна диз’юнкція має рівно один позитивний літерал"}</span>
       </At>
-      {["Диз’юнкт", "Імплікація", "Prolog", "Роль"].map((h, i) => (
+      {["Диз’юнкт", "Імплікація", "Читається", "Роль"].map((h, i) => (
         <At key={h} x={COLS[i]} y={Y0 - 52} step={2} size={22} weight={700} color={C.faint} font={F.pixel}>
           {h.toUpperCase()}
         </At>
@@ -265,9 +255,9 @@ const Horn: React.FC = () => {
                   height: RH - 18,
                   display: "flex",
                   alignItems: "center",
-                  fontFamily: j === 3 ? F.title : F.mono,
+                  fontFamily: j === 3 ? F.title : j === 2 ? F.body : F.mono,
                   fontWeight: 700,
-                  fontSize: j === 3 ? 30 : 30,
+                  fontSize: j === 2 ? 32 : 30,
                   color: j === 2 ? r.color : C.text,
                   whiteSpace: "pre",
                 }}
@@ -278,7 +268,7 @@ const Horn: React.FC = () => {
           </div>
         );
       })}
-      <At x={96} y={840} w={1720} step={3} size={30} weight={700}>
+      <At x={96} y={840} w={1720} step={3} size={34} weight={700}>
         Ковальський показав, що обмеження Prolog відповідають саме цій підмножині логіки предикатів, тому виведення в ній ефективне.
       </At>
     </Slide>
@@ -306,7 +296,7 @@ const ProsCons: React.FC = () => {
   const { s } = useSteps();
   const list = (items: string[], step: number, color: string) =>
     items.map((it, i) => (
-      <div key={it} style={{ display: "flex", gap: 14, fontFamily: F.body, fontWeight: 500, fontSize: 30, lineHeight: 1.35, color: C.text, marginBottom: 20, opacity: clamp01(s(step, 8 + i * 8)) }}>
+      <div key={it} style={{ display: "flex", gap: 14, fontFamily: F.body, fontWeight: 700, fontSize: 34, lineHeight: 1.35, color: C.text, marginBottom: 20, opacity: clamp01(s(step, 8 + i * 8)) }}>
         <span style={{ color, fontFamily: F.pixel, fontSize: 18, marginTop: 6 }}>{step === 1 ? "+" : "−"}</span>
         <span>{it}</span>
       </div>

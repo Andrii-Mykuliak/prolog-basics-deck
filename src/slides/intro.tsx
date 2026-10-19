@@ -64,7 +64,7 @@ const TitleSlide: React.FC = () => {
           transform: `translateX(${(1 - s(0, 64)) * -30}px)`,
         }}
       >
-        ?- prolog(факти, правила, запити).
+        факти + правила → відповіді
       </div>
       <AuthorBlock />
     </Slide>
@@ -72,13 +72,13 @@ const TitleSlide: React.FC = () => {
 };
 
 /* Epigraph: Kowalski's equation, with a knowledge base under Logic and a search under Control. */
-const KB = ["батько(іван, петро).", "батько(петро, анна).", "дід(X, Z) :-", "  батько(X, Y), батько(Y, Z)."];
+const KB = ["Іван – батько Петра.", "Петро – батько Анни.", "Дід – це батько батька."];
 const TREE = [
-  { x: 260, y: 40, label: "дід(іван, Z)" },
-  { x: 120, y: 130, label: "батько(іван, Y)" },
-  { x: 400, y: 130, label: "Y = петро" },
-  { x: 260, y: 220, label: "батько(петро, Z)" },
-  { x: 260, y: 300, label: "Z = анна ✓" },
+  { x: 310, y: 40, label: "Чий дід Іван?" },
+  { x: 160, y: 130, label: "Іван – батько кого?" },
+  { x: 460, y: 130, label: "Петра" },
+  { x: 310, y: 220, label: "Петро – батько кого?" },
+  { x: 310, y: 300, label: "Анни ✓" },
 ];
 const EDGES: [number, number][] = [
   [0, 1],
@@ -121,7 +121,7 @@ const Equation: React.FC = () => {
       </div>
       <Win x={300} y={300} w={620} title="Logic: що відомо" p={s(0, 64, POP)}>
         {KB.map((l, i) => (
-          <div key={i} style={{ fontFamily: F.mono, fontSize: 26, lineHeight: 1.55, color: i < 2 ? C.mint : C.amber, whiteSpace: "pre", opacity: clamp01(s(0, 70 + i * 6)) }}>
+          <div key={i} style={{ fontFamily: F.body, fontWeight: 700, fontSize: 32, lineHeight: 1.6, color: i < 2 ? C.mint : C.amber, opacity: clamp01(s(0, 70 + i * 6)) }}>
             {l}
           </div>
         ))}
@@ -139,12 +139,13 @@ const Equation: React.FC = () => {
               key={i}
               style={{
                 position: "absolute",
-                left: n.x - 120,
+                left: n.x - 190,
                 top: 62 + n.y - 16,
-                width: 240,
+                width: 380,
+                whiteSpace: "nowrap",
                 textAlign: "center",
-                fontFamily: F.mono,
-                fontSize: 21,
+                fontFamily: F.body,
+                fontSize: 28,
                 fontWeight: 700,
                 color: on ? (i === 4 ? C.mint : C.text) : C.faint,
                 textShadow: visit === i ? `0 0 14px ${C.lav}` : undefined,
@@ -181,7 +182,7 @@ const QuoteSlide: React.FC = () => {
       <At x={110} y={890} step={1} delay={24} size={30} weight={400} color={C.dim} font={F.mono}>
         Robert Kowalski
       </At>
-      <At x={110} y={936} w={1600} step={1} delay={36} size={26} weight={400} color={C.dim}>
+      <At x={110} y={936} w={1600} step={1} delay={36} size={30} weight={700} color={C.dim}>
         «Algorithm = Logic + Control», Communications of the ACM, 1979
       </At>
     </Slide>
