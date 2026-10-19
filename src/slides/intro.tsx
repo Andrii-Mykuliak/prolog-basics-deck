@@ -4,68 +4,15 @@ import { mix, POP, SlideDef, useSteps } from "../deck/steps";
 import { At, Slide } from "../deck/ui";
 import { AuthorBlock } from "../deck/Author";
 import { clamp01, useClock } from "./common";
-import { GridFloor, Planet, Stars, SynthSun, Win } from "./retro";
+import { GridFloor, Planet, RetroTitle, Stars, SynthSun, Win } from "./retro";
 
 const TitleSlide: React.FC = () => {
   const { s, frame, fps } = useSteps();
   const clock = useClock();
   const t = Math.max(frame / fps, clock);
-  const letters = (str: string, base: number) =>
-    str.split("").map((ch, i) => {
-      const p = s(0, base + i * 1.3);
-      return (
-        <span key={i} style={{ display: "inline-block", opacity: p, transform: `translateY(${(1 - p) * 60}px)`, whiteSpace: "pre" }}>
-          {ch}
-        </span>
-      );
-    });
   return (
     <Slide>
-      <Stars t={t} n={60} y0={80} h={520} opacity={clamp01(s(0, 4))} />
-      <SynthSun cx={1450} cy={600} r={190} p={s(0, 10)} t={t} id="tsun" />
-      <Planet x={1730} y={190} r={46} color={C.lav} p={s(0, 30, POP)} />
-      <GridFloor y0={600} t={t} p={s(0, 6)} vx={1450} />
-      <At x={110} y={130} step={0} delay={6} size={30} weight={400} color={C.lav} font={F.pixel}>
-        ЛЕКЦІЯ 10
-      </At>
-      <div style={{ position: "absolute", left: 104, top: 200, fontFamily: F.title, fontWeight: 700, fontSize: 64, lineHeight: 1.1, color: C.cream }}>
-        {letters("Основні принципи", 12)}
-      </div>
-      <div
-        style={{
-          position: "absolute",
-          left: 100,
-          top: 286,
-          fontFamily: F.title,
-          fontWeight: 800,
-          fontSize: 96,
-          lineHeight: 1.04,
-          color: C.pink,
-          textShadow: `0 0 26px rgba(246,115,169,0.45)`,
-          letterSpacing: 1,
-        }}
-      >
-        <div>{letters("логічного", 30)}</div>
-        <div>{letters("програмування", 42)}</div>
-      </div>
-      <div
-        style={{
-          position: "absolute",
-          left: 110,
-          top: 520,
-          padding: "10px 22px",
-          background: C.lav,
-          color: "#14120a",
-          fontFamily: F.mono,
-          fontWeight: 700,
-          fontSize: 30,
-          borderRadius: 2,
-          opacity: clamp01(s(0, 64)),
-          transform: `translateX(${(1 - s(0, 64)) * -30}px)`,
-        }}
-      >
-        факти + правила → відповіді
-      </div>
+      <RetroTitle lecture="ЛЕКЦІЯ 10" lead="Основні принципи" lines={["логічного", "програмування"]} plaque="факти + правила → відповіді" t={t} s={s} />
       <AuthorBlock />
     </Slide>
   );
